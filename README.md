@@ -17,7 +17,6 @@ Each team member then took ownership of a separate evaluation domain, stress-tes
 
 | Domain | Owner | Folder |
 |---|---|---|
-| Model Training (ARBERT & MARBERTv2) | Team | [`/model-training`](./model-training) |
 | Domain 1 — Advanced Statistical & Calibration Metrics | Mahmoud Hazem Ali Nadeem (2405477) | [`/domain-01-calibration-metrics`](./domain-01-calibration-metrics) |
 | Domain 2 — Linguistic & Dialectal Robustness | Mohamed Shreif Abdelsattar (2405467) | [`/domain-02-dialectal-robustness`](./domain-02-dialectal-robustness) |
 | Domain 3 — Error Surface & Failure Mode Analysis | Abdullah Abbas Ezzat (2405415) | [`/domain-03-error-surface`](./domain-03-error-surface) |
@@ -36,10 +35,6 @@ arabic-fake-news-detection/
 ├── .gitignore
 ├── requirements.txt
 │
-├── model-training/                    (shared notebooks that train ARBERT & MARBERTv2)
-│   ├── arbert_training.ipynb
-│   ├── marbertv2_training.ipynb
-│   └── README.md
 │
 ├── domain-01-calibration-metrics/     (Mahmoud Hazem Ali Nadeem)
 ├── domain-02-dialectal-robustness/    (Mohamed Shreif Abdelsattar)
