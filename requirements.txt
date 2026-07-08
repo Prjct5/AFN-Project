@@ -1,0 +1,13 @@
+torch
+transformers
+scikit-learn
+pandas
+numpy
+matplotlib
+seaborn
+pyarabic
+lime
+captum
+shap
+textattack
+camel-tools
