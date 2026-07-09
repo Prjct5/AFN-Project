@@ -1,0 +1,11 @@
+1. As dialect intensity increases, the True Positive rate for Real news drops from 92.5% (MSA) to
+89.1% (Mild) to 89.5% (Heavy), while the Fake detection rate stays stable near 96% — showing that
+Real news is disproportionately misclassified under dialect pressure.
+
+2. The off-diagonal growth in the Real→Fake cell is the key signal: dialectal phrasing makes the model
+more suspicious of legitimate news — a form of style-veracity bias predicted by the Domain 2 task
+specification.
+
+3. Comparing Heavy to Original: 8 additional Real samples (20→28 misclassified) were falsely flagged
+as Fake solely due to dialectal lexical substitution, with the underlying facts unchanged — direct
+empirical evidence of a Syntactic Weakness

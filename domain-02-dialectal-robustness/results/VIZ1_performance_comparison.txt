@@ -1,0 +1,11 @@
+1. ARBERT maintains strong performance across all three versions — Accuracy drops modestly from
+0.942 (Original MSA) to 0.924 (Mild) and 0.922 (Heavy), all above the 0.9 quality threshold,
+indicating reliable detection capability even under dialect pressure.
+
+2. The near-parallel behaviour of Accuracy (solid bars) and F1-Score (faded bars) confirms that
+degradation is balanced — neither Precision nor Recall is disproportionately affected, ruling out a
+class-specific bias introduced by dialectal perturbation.
+
+3. The consistent downward trend Navy → Teal → Orange provides quantitative evidence of the
+Dialect Gap: even moderate lexical substitution measurably reduces ARBERT's discriminative power
+on a formal-news-trained model

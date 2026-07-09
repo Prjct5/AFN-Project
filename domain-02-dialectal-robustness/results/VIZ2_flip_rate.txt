@@ -1,0 +1,11 @@
+1. The Prediction Flip Rate — sentences where ARBERT changed its label after dialectal conversion
+— is 3.0% for Mild and 3.2% for Heavy, both below the 10% mild-concern threshold, indicating that
+label instability is low but consistently present.
+
+2. The existence of label flips confirms the core finding of the Linguistic Perturbation task: ARBERT's
+decisions are not purely fact-driven — phrasing changes alone cause label switches in approximately 1
+in 31 samples with zero change to the underlying facts.
+
+3. The minimal gap between Mild (3.0%) and Heavy (3.2%) flip rates suggests the perturbation
+dictionary has reached a coverage ceiling — a real-world dialectal dataset would likely expose a steeper
+flip-rate curve, motivating future cross-dataset probing

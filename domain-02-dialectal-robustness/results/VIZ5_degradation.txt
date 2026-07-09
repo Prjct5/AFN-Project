@@ -1,0 +1,11 @@
+1. The Dialect Gap measures −0.018 Accuracy for Mild and −0.020 for Heavy — both in the Low
+severity zone (below the 5% threshold), confirming ARBERT's relative robustness to the lexical
+perturbations applied in this experiment.
+
+2. The minimal difference between Mild and Heavy degradation (only 0.002 gap) shows diminishing
+returns: the model is most sensitive to the first wave of common dialectal swaps (negation, pronouns,
+question words), while additional heavy substitutions provide marginal additional stress.
+
+3. The ~2% drop suggests ARBERT is currently robust to mild code-switching, but testing on real
+dialectal social-media data is recommended before declaring full Dialect Robustness — the rule-based
+perturbation used here has a coverage ceiling

@@ -1,0 +1,11 @@
+1. Mean prediction confidence stays nearly flat across versions (0.966 → 0.965 → 0.965), showing that
+ARBERT assigns high-certainty predictions even on dialectally rewritten text — a sign of model
+overconfidence in out-of-domain input.
+
+2. The flat confidence curve combined with the accuracy drop in VIZ 1 reveals a calibration gap: the
+model becomes less accurate but not less confident under dialect pressure, meaning its uncertainty
+signal cannot reliably flag dialectally-induced errors.
+
+3. This overconfidence is critical for real-world deployment — a system using ARBERT's confidence
+score to trigger manual review would miss the dialect-induced mistakes, highlighting the need for
+dialect-aware confidence calibration
