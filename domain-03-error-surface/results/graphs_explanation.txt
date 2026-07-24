@@ -1,0 +1,120 @@
+Graph Analysis Notes
+====================
+
+
+Graph 1 – Confidence KDE (Correct vs Incorrect Predictions)
+------------------------------------------------------------
+This plot shows how confident the model is when it gets things right versus when it
+gets them wrong. The blue peak (correct predictions) is incredibly sharp and sits
+right at 1.0, which means the model is almost always near-certain when it predicts
+correctly. The orange curve (incorrect predictions) is flatter and spreads from
+roughly 0.4 all the way to 1.0.
+
+The real issue here is that flat orange tail near 1.0 — the model is making wrong
+calls while still being highly confident. That's a calibration problem. High
+confidence doesn't mean correct prediction, and that's something worth addressing
+before deployment.
+
+
+Graph 2 – Spearman Correlation Heatmap
+---------------------------------------
+A few things stand out here. Text length and word count are almost the same feature
+(correlation = 0.89), so keeping both in a model would be redundant. Confidence
+has a mild negative correlation with both (-0.29 and -0.26), meaning the model
+gets slightly less confident on longer texts — makes sense intuitively.
+
+The is_error vs confidence relationship (-0.17) is weak but there. Errors tend to
+happen at slightly lower confidence levels, though not by much. URL count and
+emoji count show almost no meaningful correlation with anything, which suggests
+they don't carry much signal for this task.
+
+
+Graph 3 – Failure Mode Distribution
+-------------------------------------
+Four error types are shown here, and the distribution is pretty telling.
+
+High Confidence Failures top the chart at around 246 cases. These are the most
+dangerous errors — the model is wrong and doesn't know it. Calibration Instability
+comes second at ~178 cases, meaning the model gives inconsistent confidence scores
+for similar inputs. Trigger Word Dependency sits at ~131, where the model leans on
+specific words rather than understanding the full context. Short Context Failures
+are rare (~9 cases), so text length isn't really a driver of errors here.
+
+The takeaway: most failures are confidence-related, not comprehension-related.
+
+
+Graph 4 – MARBERTv2 Confidence Distribution
+---------------------------------------------
+Almost everything is stacked in the 0.95–1.0 bin, with correct predictions
+(green) reaching over 45,000 cases there. Incorrect predictions (red) are barely
+visible, not because errors don't exist, but because they're swamped by the volume
+of correct ones.
+
+This histogram makes the class imbalance obvious. It also shows why raw accuracy
+is a misleading metric here — the model predicts one class so frequently and
+confidently that the numbers look great on the surface.
+
+
+Graph 5 – Confusion Matrix
+----------------------------
+Numbers:
+  - True Positives  (Fake  predicted as Fake): 35,365
+  - True Negatives  (Real  predicted as Real): 11,609
+  - False Negatives (Fake  predicted as Real):    302
+  - False Positives (Real  predicted as Fake):    209
+
+Overall accuracy lands around 99.1%, which looks strong. But the 302 false
+negatives are worth paying attention to — those are fake articles the model let
+slip through as real. In a misinformation detection context, that's the more
+costly mistake compared to false positives.
+
+
+Graph 6 – ROC Curve (AUC = 0.565)
+------------------------------------
+This is where things get interesting. A 99% accuracy model should not have an AUC
+of 0.565 — that's barely above random (0.5). The ROC curve hugs the diagonal for
+most of its range, only pulling away near the top right.
+
+What this tells you is that the confidence score itself is not a reliable signal
+for separating correct from incorrect predictions. The model classifies well in
+absolute terms, but if you try to use its confidence score as a threshold to
+flag uncertain cases, it won't help much. This disconnect between accuracy and AUC
+is a direct consequence of the calibration issues seen in graphs 1 and 3.
+
+
+Graph 7 – Structural Binning: Accuracy Across Text Length Groups
+-----------------------------------------------------------------
+The dataset was split into five word-count quintiles, ranging from very short texts
+(under 11 words) to longer ones (up to 45 words). Accuracy is stable across all
+five groups, sitting between roughly 99.3% and 99.8%.
+
+There's a slight downward trend as texts get longer, but it's marginal — nothing
+that would suggest the model struggles with a particular length range. Text length
+doesn't appear to be a meaningful source of errors here.
+
+
+Graph 8 – Top Trigger Words in Error Set (TF-IDF)
+---------------------------------------------------
+These are the Arabic words that appear most frequently in the error cases, ranked
+by TF-IDF score. The top words are all prepositions and common function words.
+Normally TF-IDF would downweight these, so their high scores here suggest the
+error set might not have been filtered for stop words, or that these words
+genuinely co-occur with the harder-to-classify samples.
+
+Lower on the list: sharika (company), riyal, Riyadh, Saudi Arabia, and
+al-tawasul (communication/social media). This points to a cluster of errors around
+Saudi financial or business content, which could mean the model hasn't seen enough
+of that domain during training, or that content from that region is structurally
+harder to classify.
+
+
+====================
+Summary
+====================
+MARBERTv2 hits strong accuracy numbers (~99%), but the analysis reveals a model
+that's overconfident and poorly calibrated. The AUC of 0.565 is the clearest
+symptom — the confidence score barely correlates with prediction correctness.
+Most errors fall into the high-confidence failure category, which makes them hard
+to catch without additional post-processing. The trigger word analysis also hints
+at a domain gap around Arabic financial/Saudi content that could be worth
+addressing with targeted data augmentation.
