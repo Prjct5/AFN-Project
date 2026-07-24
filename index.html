@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arabic Fake News Detection — Team Project</title>
+<style>
+  :root {
+    --bg: #000000;
+    --panel: #0d0d0d;
+    --panel-border: #232018;
+    --gold: #c69c4f;
+    --gold-dim: #7a6636;
+    --text: #f0f0ee;
+    --text-dim: #8c8a82;
+    --mono: 'DejaVu Sans Mono', 'Courier New', monospace;
+    --sans: 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.5;
+  }
+
+  a { color: var(--gold); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .bar { height: 6px; background: var(--gold); }
+
+  header {
+    padding: 56px 60px 40px;
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-size: clamp(32px, 5vw, 52px);
+    margin: 0 0 12px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 18px;
+    max-width: 720px;
+    margin: 0 0 28px;
+  }
+
+  .chips { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .chip {
+    font-family: var(--mono);
+    font-size: 13px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 8px 14px;
+  }
+
+  .links-row {
+    margin-top: 26px;
+    font-family: var(--mono);
+    font-size: 14px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  main { padding: 48px 60px 80px; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 24px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-left: 3px solid var(--gold);
+    padding: 28px;
+  }
+
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+
+  .card-num {
+    font-family: var(--mono);
+    font-weight: 700;
+    color: var(--gold);
+    font-size: 20px;
+  }
+
+  .card h2 {
+    font-size: 19px;
+    margin: 4px 0 4px;
+  }
+
+  .card .owner {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .card .owner a { color: var(--text-dim); }
+  .card .owner a:hover { color: var(--gold); }
+
+  .pdf-frame-wrap {
+    border: 1px solid var(--panel-border);
+    background: #050505;
+    margin-bottom: 16px;
+    height: 420px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .pdf-frame-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .pdf-frame-wrap .placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 13px;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .repost-slot {
+    margin-top: 18px;
+    border-top: 1px dashed var(--panel-border);
+    padding-top: 18px;
+  }
+
+  .repost-slot .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+
+  .repost-embed-placeholder {
+    border: 1px dashed var(--panel-border);
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 18px;
+    text-align: center;
+  }
+
+  footer {
+    padding: 32px 60px;
+    border-top: 1px solid var(--panel-border);
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  @media (max-width: 640px) {
+    header, main, footer { padding-left: 24px; padding-right: 24px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bar"></div>
+
+<header>
+  <div class="eyebrow">NLP // ARABIC TEXT CLASSIFICATION // MODEL AUDIT</div>
+  <h1>Arabic Fake News Detection</h1>
+  <p class="subtitle">
+    Fine-tuned ARBERT and MARBERTv2 models, evaluated across five technical
+    domains: calibration, dialectal robustness, error analysis,
+    interpretability, and adversarial security.
+  </p>
+  <div class="chips">
+    <div class="chip">ARBERT :: FORMAL MSA NEWS</div>
+    <div class="chip">MARBERTv2 :: DIALECTAL SOCIAL MEDIA</div>
+  </div>
+  <div class="links-row">
+    <a href="https://github.com/Prjct5/AFN-Project" target="_blank" rel="noopener">github.com/Prjct5/AFN-Project</a>
+  </div>
+</header>
+
+<main>
+  <div class="section-label">EVALUATION DOMAINS</div>
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-num">05</div>
+      </div>
+      <h2>Adversarial &amp; Security Testing</h2>
+      <div class="owner">Mohammed Tamer — <a href="https://www.linkedin.com/in/mohammed-tamer-11160a41a/" target="_blank" rel="noopener">LinkedIn</a></div>
+
+      <div class="pdf-frame-wrap">
+        <iframe src="https://prjct5.github.io/AFN-Project/docs/5.pdf" title="Domain 5 slides"></iframe>
+      </div>
+
+      <div class="card-actions">
+        <a href="https://prjct5.github.io/AFN-Project/docs/5.pdf" target="_blank" rel="noopener">Open full screen</a>
+        <a href="domain-05-adversarial-security" target="_blank" rel="noopener">View code &amp; results</a>
+      </div>
+
+      <div class="repost-slot">
+        <div class="label">LINKEDIN POST</div>
+        <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7485804271834374144?collapsed=1" height="541" width="504" frameborder="0" allowfullscreen style="max-width:100%;"></iframe>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-num">01</div>
+      </div>
+      <h2>Advanced Statistical &amp; Calibration Metrics</h2>
+      <div class="owner">Mahmoud Hazem Ali Nadeem — <a href="https://www.linkedin.com/in/mahmoud-nadeem/" target="_blank" rel="noopener">LinkedIn</a></div>
+
+      <div class="pdf-frame-wrap">
+        <iframe src="https://prjct5.github.io/AFN-Project/docs/1.pdf" title="Domain 1 slides"></iframe>
+      </div>
+
+      <div class="card-actions">
+        <a href="https://prjct5.github.io/AFN-Project/docs/1.pdf" target="_blank" rel="noopener">Open full screen</a>
+        <a href="domain-01-calibration-metrics" target="_blank" rel="noopener">View code &amp; results</a>
+      </div>
+
+      <div class="repost-slot">
+        <div class="label">LINKEDIN POST</div>
+        <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7485994141403869184?collapsed=1" height="541" width="504" frameborder="0" allowfullscreen="" title="Embedded post" style="max-width:100%;"></iframe>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-num">02</div>
+      </div>
+      <h2>Linguistic &amp; Dialectal Robustness</h2>
+      <div class="owner">Mohamed Shreif Abdelsattar — <a href="https://www.linkedin.com/in/mohamed-shreif-97b528357/" target="_blank" rel="noopener">LinkedIn</a></div>
+
+      <div class="pdf-frame-wrap">
+        <iframe src="https://prjct5.github.io/AFN-Project/docs/3.pdf" title="Domain 2 slides"></iframe>
+      </div>
+
+      <div class="card-actions">
+        <a href="https://prjct5.github.io/AFN-Project/docs/3.pdf" target="_blank" rel="noopener">Open full screen</a>
+        <a href="domain-02-dialectal-robustness" target="_blank" rel="noopener">View code &amp; results</a>
+      </div>
+
+      <div class="repost-slot">
+        <div class="label">LINKEDIN POST</div>
+        <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7486040580213612544?collapsed=1" height="541" width="504" frameborder="0" allowfullscreen="" title="Embedded post" style="max-width:100%;"></iframe>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-num">03</div>
+      </div>
+      <h2>Error Surface &amp; Failure Mode Analysis</h2>
+      <div class="owner">Abdullah Abbas Ezzat — <a href="https://www.linkedin.com/in/abdallah-abass-b828583b1/" target="_blank" rel="noopener">LinkedIn</a></div>
+
+      <div class="pdf-frame-wrap">
+        <iframe src="https://prjct5.github.io/AFN-Project/docs/2.pdf" title="Domain 3 slides"></iframe>
+      </div>
+
+      <div class="card-actions">
+        <a href="https://prjct5.github.io/AFN-Project/docs/2.pdf" target="_blank" rel="noopener">Open full screen</a>
+        <a href="domain-03-error-surface" target="_blank" rel="noopener">View code &amp; results</a>
+      </div>
+        
+      <div class="repost-slot">
+        <div class="label">LINKEDIN POST</div>
+        <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7486176575248351233?collapsed=1" height="541" width="504" frameborder="0" allowfullscreen="" title="Embedded post" style="max-width:100%;"></iframe>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-num">04</div>
+      </div>
+      <h2>Interpretability &amp; Black-Box Probing</h2>
+      <div class="owner">Ali Alaa Salah — <a href="https://www.linkedin.com/in/ali-alaa-salah/" target="_blank" rel="noopener">LinkedIn</a></div>
+
+      <div class="pdf-frame-wrap">
+        <iframe src="https://prjct5.github.io/AFN-Project/docs/4.pdf" title="Domain 4 slides"></iframe>
+      </div>
+
+      <div class="card-actions">
+        <a href="https://prjct5.github.io/AFN-Project/docs/4.pdf" target="_blank" rel="noopener">Open full screen</a>
+        <a href="domain-04-interpretability" target="_blank" rel="noopener">View code &amp; results</a>
+      </div>
+
+      <div class="repost-slot">
+        <div class="label">LINKEDIN POST</div>
+        <div class="repost-embed-placeholder">
+          Coming soon.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div>Arabic Fake News Detection — Team Project</div>
+  <div>5 DOMAINS // 2 MODELS</div>
+</footer>
+
+<div class="bar"></div>
+
+</body>
+</html>
